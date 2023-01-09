@@ -3,7 +3,7 @@ let user = 'https://icons.iconarchive.com/icons/graphicloads/flat-finance/256/pe
 const form = document.querySelector("form");
 const chatContainer = document.querySelector("#chat_container");
 var endpoint = 'https://api.openai.com/v1/completions';
-var apiKey = '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';
+var apiKey = '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';
 let loadInterval;
 var request = new XMLHttpRequest();
 let messageDiv;
