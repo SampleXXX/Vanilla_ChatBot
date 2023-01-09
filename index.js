@@ -3,7 +3,7 @@ let user = 'https://icons.iconarchive.com/icons/graphicloads/flat-finance/256/pe
 const form = document.querySelector("form");
 const chatContainer = document.querySelector("#chat_container");
 var endpoint = 'https://api.openai.com/v1/completions';
-var apiKey = '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';
+var apiKey = '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';
 let loadInterval;
 var request = new XMLHttpRequest();
 let messageDiv;
@@ -20,6 +20,7 @@ function loader(element) {
     }
   }, 300);
 }
+
 function typeText(element, text) {
     let index = 0;
   
@@ -63,7 +64,23 @@ function chatStripe(isAi, value, uniqueId) {
 // Define an array to store the previous messages
 // Define an array to store the previous messages
 // Define an array to store the previous messages
-let previousMessages = [];
+let previousMessages;
+if (localStorage.getItem('PrevMsgs') !== null) {
+  try{
+  previousMessages = JSON.parse(localStorage.getItem('PrevMsgs'));
+  
+}
+catch(err) {
+  previousMessages = [];
+  console.log(err);
+}
+}
+
+ else {
+  localStorage.setItem('PrevMsgs', JSON.stringify(previousMessages));
+}
+
+console.log(previousMessages);
 
 // ...
 
@@ -73,18 +90,16 @@ const handleSubmit = async (e) => {
 
 
   const data = new FormData(form);
- localStorage.setItem("previousMessages", JSON.stringify([{ sender: "User", text: data.get("prompt") }]));
   // Store the current message in the previousMessages array
   previousMessages.push({ sender: "User", text: data.get("prompt") });
 
   // Use the previousMessages array to inform the app's response
   let prompt = data.get("prompt");
-  if (localStorage.getItem("previousMessages")) {
-    const previousMessages = JSON.parse(localStorage.getItem("previousMessages"));
-  }
+console.log(previousMessages.length);
   if (previousMessages.length > 1) {
     prompt += `\n\n Previous messages: \n`;
     previousMessages.forEach((message) => {
+
       if (message.sender === "AI") {
         prompt += `${message.text}\n`;
       } else {
@@ -121,23 +136,22 @@ const handleSubmit = async (e) => {
     max_tokens: 3000, // The maximum number
   // The maximum number of tokens to generate in the completion. Most models have a context length of 2048 tokens (except for the newest models, which support 4096).
 };
-console.log(body.prompt);
-console.log(JSON.stringify(body));
+
 request.send(JSON.stringify(body));
 
 request.onreadystatechange = function() {
   if (request.readyState === 4 && request.status === 200) {
     // clear the loading interval
-
     clearInterval(loadInterval);
     messageDiv.innerHTML = '';
-    console.log(previousMessages);
+
     const response = JSON.parse(request.responseText);
     setTimeout(() => {
-        typeText(messageDiv, response.choices[0].text);
+        typeText(messageDiv, response.choices[0].text.trim());
       }, 1000);
     // store the AI's response in the previousMessages array
-    previousMessages.push({ sender: "AI", text: response.choices[0].text });
+    previousMessages.push({ sender: "AI", text: response.choices[0].text.trim()});
+    localStorage.setItem('PrevMsgs', JSON.stringify(previousMessages));
   }
 }
 }
