@@ -107,6 +107,31 @@ body {
   scrollbar-width: none;
 }
 
+.delchat {
+  box-sizing: border-box;
+  position: absolute;
+  top: 5%;
+  left: 0;
+  text-align: right;
+  
+  right: 3%;
+
+}
+
+.delchat span {
+  box-sizing: border-box;
+  color: white;
+  text-transform: capitalize;
+  border-radius: 5px;
+  background-color: #40414F;
+  padding: 20px;
+}
+.delchat span:hover {
+
+  background-color: #343541;
+  border: 1px solid #565764;
+  padding: 19px;
+}
 /* hides scrollbar */
 .message::-webkit-scrollbar {
   display: none;
